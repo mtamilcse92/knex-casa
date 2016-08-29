@@ -3,6 +3,7 @@ var router = express.Router();
 var connection = require('../database/connections');
 var knex = require('knex')(connection.connection);
 var bookShelf = require('bookshelf')(knex);
+var _ = require('lodash');
 var Tenant = bookShelf.Model.extend({
     tableName: 'tenant',
     entity: function() {
@@ -20,6 +21,13 @@ var Entity = bookShelf.Model.extend({
     }
 });
 
+var Fields = bookShelf.Model.extend({
+    tableName: 'fields',
+    entity: function() {
+        return this.belongsTo(Entity);
+    }
+});
+
 router.post('/', function(req, res) {
     var name = req.param('name');
     new Tenant({ tenant_name: name })
@@ -34,7 +42,7 @@ router.post('/', function(req, res) {
 router.get('/:id', function(req, res) {
     var id = req.param('id');
     console.log(id);
-    Tenant.where({ id: id }).fetch({withRelated:'entity'}).then(function(model) {
+    Tenant.where({ id: id }).fetch({ withRelated: 'entity' }).then(function(model) {
         console.log(model.toJSON());
         res.json(model.toJSON());
     }).catch(function(err) {
@@ -81,6 +89,5 @@ router.delete('/:id', function(req, res) {
         }).catch(function(err) {
             res.send(err);
         });
-
 });
 module.exports = router;

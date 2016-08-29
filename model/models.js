@@ -10,12 +10,12 @@ bookShelf.knex.schema.hasTable('tenant').then(function(exists) {
                 }).createTable('entity', function(table) {
                     table.increments('id');
                     table.string('entity_name');
-                    table.integer('tenant_id').unsigned().references('tenant.id');
+                    table.integer('tenant_id').unsigned().references('tenant.id').onDelete('CASCADE');
                 }).createTable('fields', function(table) {
                     table.increments('id');
                     table.string('fields_name');
                     table.string('type');
-                    table.integer('entity_id').unsigned().references('entity.id');
+                    table.integer('entity_id').unsigned().references('entity.id').onDelete('CASCADE');
                 }).catch(function(e) {
                     console.error(e);
                 });

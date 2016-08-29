@@ -14,7 +14,7 @@ router.post('/', function(req, res) {
     var name = req.param('name');
     var types = req.param('types');
     var id = req.param('id');
-    new Fields({ fields_name: name, type:types,entity_id:id })
+    new Fields({ fields_name: name, type: types, entity_id: id })
         .save().then(function(model) {
             console.log("inserted");
             res.json(model.toJSON());
@@ -25,7 +25,7 @@ router.post('/', function(req, res) {
 
 
 router.get('/:id', function(req, res) {
-     var id = req.param('id');
+    var id = req.param('id');
     console.log(id);
     Fields.where({ id: id }).fetch().then(function(model) {
         console.log(model.toJSON());
@@ -47,8 +47,12 @@ router.put('/:id', function(req, res) {
 });
 
 router.delete('/:id', function(req, res) {
-	var id = req.param('id');
-    Fields.where({ id: id }).destroy()
+    var id = req.param('id');
+    // Fields.where({ id: id }).destroy()
+
+    knex("tenant").del().where({
+            id:id
+        })
         .then(function(model) {
             res.json("deleted");
         }).catch(function(err) {
